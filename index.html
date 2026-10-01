@@ -1,0 +1,369 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Карта выявления потребностей KSC</title>
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg, #eaf6ff, #ffffff);
+  color: #102b85;
+}
+
+.container {
+  max-width: 1200px;
+  margin: auto;
+  padding: 30px;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.stage {
+  display: inline-block;
+  background: #d8efff;
+  color: #0874ee;
+  padding: 10px 25px;
+  border-radius: 30px;
+  font-weight: bold;
+}
+
+h1 {
+  font-size: clamp(30px, 5vw, 54px);
+  margin: 18px 0 10px;
+  font-weight: 800;
+}
+
+.subtitle {
+  color: #35518f;
+  font-size: 18px;
+  line-height: 1.5;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 22px;
+}
+
+.card {
+  background: rgba(255,255,255,0.94);
+  border: 2px solid #d5ebff;
+  border-radius: 22px;
+  padding: 20px;
+  cursor: pointer;
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  transition: 0.25s;
+  box-shadow: 0 5px 15px rgba(35,110,200,0.07);
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  border-color: #2993ff;
+  box-shadow: 0 10px 24px rgba(35,110,200,0.16);
+}
+
+.card.active {
+  background: #e8f4ff;
+  border-color: #087bfa;
+  box-shadow: 0 0 0 3px rgba(8,123,250,0.12);
+}
+
+.number {
+  min-width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #087bfa;
+  color: white;
+  display: grid;
+  place-items: center;
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.card h2 {
+  font-size: 21px;
+  margin: 5px 0 8px;
+}
+
+.card p {
+  color: #466096;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.detail {
+  margin-top: 25px;
+  padding: 28px;
+  border-radius: 24px;
+  background: white;
+  border: 2px solid #cce7ff;
+  box-shadow: 0 8px 25px rgba(30,100,180,0.09);
+  min-height: 260px;
+}
+
+.detail h2 {
+  font-size: 27px;
+  margin-top: 0;
+}
+
+.question {
+  padding: 13px 16px;
+  margin: 10px 0;
+  background: #f0f8ff;
+  border-radius: 12px;
+  color: #183c8b;
+  line-height: 1.45;
+}
+
+.question:before {
+  content: "💬 ";
+}
+
+.tip {
+  margin-top: 20px;
+  background: #fff5d7;
+  color: #694d00;
+  padding: 17px;
+  border-radius: 14px;
+  line-height: 1.5;
+}
+
+.progress {
+  margin-top: 20px;
+  background: #dceeff;
+  height: 10px;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  width: 0%;
+  background: #087bfa;
+  transition: 0.3s;
+}
+
+.progress-text {
+  margin-top: 10px;
+  color: #42609a;
+  font-size: 14px;
+}
+
+.footer {
+  margin-top: 25px;
+  padding: 22px;
+  background: #dff1ff;
+  border-radius: 18px;
+  text-align: center;
+  line-height: 1.6;
+  font-size: 17px;
+}
+
+button {
+  background: #087bfa;
+  color: white;
+  border: 0;
+  padding: 13px 22px;
+  border-radius: 12px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: 15px;
+}
+
+button:hover { background: #075fc4; }
+
+@media(max-width: 700px) {
+  .container { padding: 16px; }
+  .layout { grid-template-columns: 1fr; }
+  .card h2 { font-size: 19px; }
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+
+<header class="header">
+  <div class="stage">Этап 2</div>
+  <h1>Карта выявления потребностей</h1>
+  <div class="subtitle">
+    Выбери раздел карты, чтобы увидеть вопросы для разговора с клиентом.
+  </div>
+</header>
+
+<div class="layout" id="cards"></div>
+
+<section class="detail" id="detail">
+  <h2>🔎 Начнём разговор</h2>
+  <p>Нажми на любую из семи плашек выше. Откроются вопросы, которые помогут понять потребности клиента.</p>
+</section>
+
+<div class="progress">
+  <div class="progress-fill" id="progressFill"></div>
+</div>
+<div class="progress-text" id="progressText">Изучено разделов: 0 из 7</div>
+
+<div class="footer">
+  <strong>Главное:</strong><br>
+  Наша задача не собрать как можно больше информации,
+  а понять, какое решение действительно подойдёт клиенту.
+  <br>
+  <button onclick="resetMap()">Начать заново</button>
+</div>
+
+</div>
+
+<script>
+const sections = [
+{
+title:"Задача",
+short:"Что клиент хочет решить?",
+questions:[
+"Для чего вы подбираете садовую мебель?",
+"Какую задачу должна решить покупка?",
+"Что для вас будет главным результатом удачного выбора?",
+"Что стало поводом задуматься о покупке именно сейчас?"
+],
+tip:"Выясни не только какую мебель хочет клиент, но и зачем она ему нужна."
+},
+{
+title:"Контекст",
+short:"Где и как будет использоваться мебель?",
+questions:[
+"Где планируете разместить мебель: на террасе, даче, в саду или у бассейна?",
+"Мебель будет находиться под открытым небом или под навесом?",
+"Как часто планируете ей пользоваться?",
+"Кто чаще всего будет пользоваться мебелью?"
+],
+tip:"Условия эксплуатации помогают понять, какие материалы и конструкции подойдут."
+},
+{
+title:"Параметры",
+short:"Какие характеристики действительно важны?",
+questions:[
+"На какое количество человек рассчитываете?",
+"Какие предметы мебели вам необходимы?",
+"Есть ли предпочтения по цвету и материалу?",
+"Какие размеры пространства нужно учитывать?",
+"Что для вас важнее всего: внешний вид, удобство или функциональность?"
+],
+tip:"Не предлагай ассортимент вслепую. Сначала определи ключевые параметры."
+},
+{
+title:"Ограничения",
+short:"Что может повлиять на выбор?",
+questions:[
+"Есть ли ограничения по размеру или размещению мебели?",
+"Нужно ли учитывать особенности поверхности или площадки?",
+"Есть ли требования к уходу и хранению?",
+"С какими условиями эксплуатации должна справляться мебель?"
+],
+tip:"Ограничения помогают сразу исключить неподходящие варианты."
+},
+{
+title:"Сроки",
+short:"Когда продукт нужен?",
+questions:[
+"К какому времени планируете приобрести мебель?",
+"Есть ли конкретная дата, к которой всё должно быть готово?",
+"Покупка планируется сейчас или пока изучаете варианты?",
+"Насколько принципиальны сроки получения?"
+],
+tip:"Сроки помогают определить приоритетность предложения и дальнейшие действия."
+},
+{
+title:"Условия покупки",
+short:"Объём, бюджет, доставка и оплата",
+questions:[
+"Какое количество комплектов или отдельных изделий рассматриваете?",
+"На какой бюджет ориентируетесь?",
+"Потребуется ли доставка? Куда именно?",
+"Какой способ оплаты вам удобен?",
+"Планируете приобрести всё сразу или поэтапно?"
+],
+tip:"Обсуждай бюджет и условия спокойно, как параметры подбора решения."
+},
+{
+title:"Принятие решения",
+short:"Кто выбирает и согласовывает покупку?",
+questions:[
+"Вы самостоятельно принимаете решение о покупке?",
+"Нужно ли с кем-то согласовать выбор?",
+"Какие критерии будут определяющими при сравнении вариантов?",
+"Что ещё необходимо, чтобы вы могли принять решение?",
+"Когда будет удобно вернуться к обсуждению?"
+],
+tip:"Понимание процесса принятия решения помогает договориться о конкретном следующем шаге."
+}
+];
+
+let completed = new Set();
+let active = -1;
+
+function renderCards() {
+  document.getElementById("cards").innerHTML = sections.map((s,i)=>`
+    <div class="card ${active===i?'active':''}" onclick="selectSection(${i})">
+      <div class="number">${completed.has(i) ? '✓' : i+1}</div>
+      <div>
+        <h2>${s.title}</h2>
+        <p>${s.short}</p>
+      </div>
+    </div>
+  `).join("");
+}
+
+function selectSection(i) {
+  active = i;
+  completed.add(i);
+  const s = sections[i];
+
+  document.getElementById("detail").innerHTML = `
+    <h2>${i+1}. ${s.title}</h2>
+    <p>Примеры открытых вопросов для менеджера:</p>
+    ${s.questions.map(q=>`<div class="question">${q}</div>`).join("")}
+    <div class="tip"><strong>Подсказка менеджеру:</strong><br>${s.tip}</div>
+    <button onclick="nextSection()">Следующий раздел →</button>
+  `;
+
+  updateProgress();
+  renderCards();
+}
+
+function nextSection() {
+  let next = (active + 1) % sections.length;
+  selectSection(next);
+}
+
+function updateProgress() {
+  document.getElementById("progressFill").style.width =
+    (completed.size / sections.length * 100) + "%";
+  document.getElementById("progressText").textContent =
+    `Изучено разделов: ${completed.size} из 7`;
+}
+
+function resetMap() {
+  completed.clear();
+  active = -1;
+  document.getElementById("detail").innerHTML = `
+    <h2>🔎 Начнём разговор</h2>
+    <p>Нажми на любую из семи плашек выше. Откроются вопросы, которые помогут понять потребности клиента.</p>
+  `;
+  updateProgress();
+  renderCards();
+}
+
+renderCards();
+</script>
+</body>
+</html>
