@@ -1,0 +1,679 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Финальная практика | Работа с возражениями</title>
+
+<style>
+:root {
+  --navy: #102b59;
+  --blue: #2588ec;
+  --sky: #56b5ff;
+  --pale: #edf7ff;
+  --yellow: #ffc32e;
+  --ink: #172b49;
+  --muted: #617491;
+  --green: #21865b;
+  --red: #c64b4b;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: #f3f9ff;
+  color: var(--ink);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.wrap {
+  max-width: 980px;
+  margin: auto;
+  padding: 22px 14px;
+}
+
+.shell {
+  overflow: hidden;
+  border: 1px solid #d9ecff;
+  border-radius: 25px;
+  background: linear-gradient(145deg, #fff, #eff8ff);
+  box-shadow: 0 12px 34px #1e70b51a;
+}
+
+.top {
+  padding: 28px 30px 18px;
+  background: radial-gradient(
+    ellipse at 86% 0%,
+    #d9efff,
+    transparent 44%
+  );
+}
+
+.eyebrow {
+  font-size: 12px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #4b83b7;
+  font-weight: bold;
+}
+
+h1 {
+  font-size: clamp(27px, 5vw, 42px);
+  line-height: 1.08;
+  margin: 12px 0;
+  color: var(--navy);
+}
+
+h1 span {
+  color: var(--blue);
+}
+
+.intro {
+  color: var(--muted);
+  line-height: 1.55;
+  max-width: 760px;
+  margin: 0;
+}
+
+.progress-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 22px;
+}
+
+.track {
+  height: 9px;
+  flex: 1;
+  background: #dceeff;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.fill {
+  height: 100%;
+  width: 0;
+  background: linear-gradient(90deg, var(--blue), var(--sky));
+  transition: width .3s;
+}
+
+.count {
+  font-size: 13px;
+  color: #54708e;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+.content {
+  padding: 22px 30px 30px;
+}
+
+.pill {
+  display: inline-block;
+  background: #e5f3ff;
+  color: #176bbd;
+  border: 1px solid #c8e5ff;
+  border-radius: 30px;
+  padding: 8px 13px;
+  font-weight: bold;
+  font-size: 13px;
+}
+
+.client {
+  margin: 17px 0 20px;
+  padding: 20px 22px;
+  background: white;
+  border: 1px solid #dceeff;
+  border-radius: 18px;
+  box-shadow: 0 5px 18px #1e70b50b;
+}
+
+.client-label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: #6c8aaa;
+  font-weight: bold;
+  margin-bottom: 9px;
+}
+
+.client-quote {
+  font-size: clamp(19px, 3vw, 25px);
+  line-height: 1.35;
+  font-weight: bold;
+  color: var(--navy);
+}
+
+.prompt {
+  font-size: 17px;
+  font-weight: bold;
+  margin: 0 0 13px;
+}
+
+.options {
+  display: grid;
+  gap: 10px;
+}
+
+.option {
+  width: 100%;
+  display: flex;
+  gap: 13px;
+  align-items: flex-start;
+  text-align: left;
+  border: 1.5px solid #d7eaff;
+  background: white;
+  border-radius: 15px;
+  padding: 15px 16px;
+  color: var(--ink);
+  font: inherit;
+  line-height: 1.45;
+  cursor: pointer;
+  transition: .18s;
+}
+
+.option:hover {
+  border-color: #65b7ff;
+  background: #f6fbff;
+  transform: translateY(-1px);
+}
+
+.option:focus-visible,
+.action:focus-visible {
+  outline: 3px solid var(--yellow);
+  outline-offset: 3px;
+}
+
+.letter {
+  flex: 0 0 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: #e6f4ff;
+  color: #1476d0;
+  font-weight: 800;
+}
+
+.option.selected {
+  border-color: var(--blue);
+  background: #edf7ff;
+}
+
+.option.correct {
+  border-color: var(--green);
+  background: #f0fbf5;
+}
+
+.option.wrong {
+  border-color: var(--red);
+  background: #fff5f4;
+}
+
+.feedback {
+  display: none;
+  margin-top: 16px;
+  padding: 17px 18px;
+  border-radius: 15px;
+  background: white;
+  border: 1px solid #d9e9f6;
+  line-height: 1.5;
+}
+
+.feedback.show {
+  display: block;
+}
+
+.feedback.good {
+  border-left: 5px solid var(--green);
+}
+
+.feedback.try {
+  border-left: 5px solid var(--yellow);
+}
+
+.feedback strong {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--navy);
+}
+
+.controls {
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+.action {
+  border: 0;
+  border-radius: 13px;
+  padding: 13px 20px;
+  font-weight: bold;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.primary {
+  background: linear-gradient(110deg, #1679e0, #46aaff);
+  color: white;
+  box-shadow: 0 6px 14px #2588ec30;
+}
+
+.primary:disabled {
+  opacity: .45;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.small-note {
+  font-size: 12px;
+  color: #7890a9;
+}
+
+.result {
+  display: none;
+  padding: 28px 30px 32px;
+  text-align: center;
+}
+
+.result.show {
+  display: block;
+}
+
+.score {
+  font-size: 54px;
+  font-weight: 800;
+  color: var(--blue);
+  margin: 10px 0;
+}
+
+.result h2 {
+  color: var(--navy);
+  font-size: 30px;
+  margin: 8px 0;
+}
+
+.result p {
+  color: var(--muted);
+  line-height: 1.55;
+  max-width: 700px;
+  margin: 0 auto 18px;
+}
+
+.skills {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  text-align: left;
+  margin: 22px 0;
+}
+
+.skill {
+  background: white;
+  border: 1px solid #dceeff;
+  border-radius: 14px;
+  padding: 13px;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.skill b {
+  display: block;
+  color: var(--navy);
+  margin-bottom: 4px;
+}
+
+@media(max-width:620px) {
+  .top,
+  .content {
+    padding: 22px 18px;
+  }
+
+  .skills {
+    grid-template-columns: 1fr;
+  }
+
+  .client {
+    padding: 17px;
+  }
+
+  .option {
+    padding: 13px;
+  }
+
+  .controls .action {
+    flex: 1;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="wrap">
+<section class="shell" id="quiz">
+
+<header class="top">
+  <div class="eyebrow">Финальная практика · KSC</div>
+
+  <h1>
+    Возражение:
+    <span>найди верный ход</span>
+  </h1>
+
+  <p class="intro">
+    Пять ситуаций из разговора о садовой мебели.
+    Выбирай ответ, смотри на реакцию клиента и тренируй
+    навык вести диалог без давления.
+  </p>
+
+  <div class="progress-row">
+    <div class="track">
+      <div class="fill" id="fill"></div>
+    </div>
+    <div class="count" id="count">Ситуация 1 из 5</div>
+  </div>
+</header>
+
+<div class="content" id="stage">
+  <div class="pill" id="step"></div>
+
+  <div class="client">
+    <div class="client-label">Клиент говорит</div>
+    <div class="client-quote" id="quote"></div>
+  </div>
+
+  <p class="prompt">Как поступишь?</p>
+
+  <div class="options" id="options"></div>
+
+  <div class="feedback" id="feedback" aria-live="polite"></div>
+
+  <div class="controls">
+    <span class="small-note" id="hint">
+      Выбери один вариант ответа.
+    </span>
+    <button class="action primary" id="next" disabled>
+      Проверить ответ
+    </button>
+  </div>
+</div>
+
+<div class="result" id="result">
+  <div class="pill">Практика завершена</div>
+
+  <h2 id="resultTitle">Диалог пройден!</h2>
+
+  <div class="score" id="score">0 из 5</div>
+
+  <p id="resultText"></p>
+
+  <div class="skills">
+    <div class="skill">
+      <b>Сначала понять</b>
+      Уточняй причину сомнения, не додумывай за клиента.
+    </div>
+
+    <div class="skill">
+      <b>Связать с потребностью</b>
+      Подбирай аргумент под задачу, площадку и критерии выбора.
+    </div>
+
+    <div class="skill">
+      <b>Договориться о шаге</b>
+      Фиксируй продолжение общения без давления.
+    </div>
+  </div>
+
+  <button class="action primary" onclick="restart()">
+    Пройти ещё раз
+  </button>
+</div>
+
+</section>
+</div>
+
+<script>
+const cases = [
+{
+  tag: "Прояснение сомнения",
+  quote: "«Мне нравится комплект, но я пока подумаю».",
+  options: [
+    "Хорошо, подумайте. Будем рады видеть вас снова.",
+    "Конечно. Подскажите, пожалуйста, что именно хотите обдумать? Возможно, остались вопросы по модели, цене или условиям покупки?",
+    "Тогда давайте оформим заказ сейчас, пока комплект есть в наличии."
+  ],
+  correct: 1,
+  good: "Ты не споришь и не торопишь клиента. Уточняешь, что стоит за фразой «подумаю», чтобы понять, какой информации не хватает для решения.",
+  bad: [
+    "Вежливо, но разговор заканчивается, а причина сомнения остаётся неизвестной.",
+    "",
+    "Фраза создаёт давление. Сначала важно разобраться, что мешает принять решение."
+  ]
+},
+{
+  tag: "Сравнение вариантов",
+  quote: "«Нужно ещё посмотреть и сравнить».",
+  options: [
+    "Конечно. С чем именно планируете сравнивать: стоимостью, материалом, дизайном или комплектацией? Могу помочь сопоставить варианты по этим критериям.",
+    "Наш комплект лучше других, поэтому долго сравнивать нет смысла.",
+    "Тогда посмотрите всё самостоятельно и возвращайтесь, если что-то понравится."
+  ],
+  correct: 0,
+  good: "Ты принимаешь потребность сравнить и переводишь её в понятные критерии. Так можно предметно показать различия и помочь клиенту оценить варианты.",
+  bad: [
+    "",
+    "Общее утверждение без фактов не помогает выбору и может вызвать спор.",
+    "Клиент остаётся один на один с выбором. Предложи помощь и уточни критерии сравнения."
+  ]
+},
+{
+  tag: "Помощь с выбором",
+  quote: "«Мы пока не определились с выбором».",
+  options: [
+    "Тогда покажу весь каталог, там много моделей.",
+    "Давайте вернёмся к тому, что для вас важно: размеры террасы, сколько человек будет пользоваться мебелью, желаемый стиль и бюджет. По этим критериям сузим выбор до двух-трёх комплектов.",
+    "Возьмите самый популярный комплект. Его чаще всего покупают."
+  ],
+  correct: 1,
+  good: "Ты возвращаешь разговор к потребностям и сокращаешь сложность выбора. Несколько подходящих вариантов легче сравнить, чем весь каталог.",
+  bad: [
+    "Большой каталог может усилить неопределённость. Сначала задай критерии отбора.",
+    "",
+    "Популярность не гарантирует соответствие конкретной террасе и ожиданиям клиента."
+  ]
+},
+{
+  tag: "Аргументация ценности",
+  quote: "«Для нас дороговато. Видели похожую мебель дешевле».",
+  options: [
+    "У нас качество лучше, поэтому цена такая.",
+    "Могу предложить скидку, если оформим заказ сегодня.",
+    "Понимаю, бюджет важен. Подскажите, пожалуйста, что для вас принципиально в сравнении: материал, комплектация, внешний вид или условия покупки? Тогда сопоставим варианты и посмотрим, где можно подобрать решение в вашем бюджете."
+  ],
+  correct: 2,
+  good: "Ты признаёшь значимость бюджета и выясняешь, с чем клиент сравнивает предложения. После этого можно аргументировать конкретные преимущества или подобрать другой вариант.",
+  bad: [
+    "Без конкретных подтверждений это звучит как голословное обещание.",
+    "Скидка предложена до выяснения причины. Возможно, вопрос не только в цене.",
+    ""
+  ]
+},
+{
+  tag: "Следующий шаг",
+  quote: "«Мне нужно посоветоваться с супругой. Пока не готов принять решение».",
+  options: [
+    "Конечно. Что будет важно обсудить вместе? Я могу отправить два подходящих варианта с характеристиками и стоимостью. Когда вам будет удобно вернуться к разговору?",
+    "Хорошо, тогда ждём вашего звонка.",
+    "Лучше оформить сейчас, а потом дома обсудите."
+  ],
+  correct: 0,
+  good: "Ты уважаешь процесс принятия решения, помогаешь клиенту обсудить выбор и согласовываешь конкретный следующий шаг.",
+  bad: [
+    "",
+    "Диалог остаётся без договорённости. Предложи полезный материал и удобное время повторного контакта.",
+    "Давление может снизить доверие. Сначала помоги клиенту подготовиться к обсуждению."
+  ]
+}
+];
+
+let index = 0;
+let selected = null;
+let score = 0;
+let locked = false;
+
+const $ = id => document.getElementById(id);
+
+function render() {
+  const c = cases[index];
+
+  selected = null;
+  locked = false;
+
+  $("step").textContent =
+    `Ситуация ${index + 1} · ${c.tag}`;
+
+  $("quote").textContent = c.quote;
+  $("options").innerHTML = "";
+
+  c.options.forEach((text, i) => {
+    const b = document.createElement("button");
+
+    b.className = "option";
+    b.type = "button";
+    b.innerHTML =
+      `<span class="letter">${"АБВ"[i]}</span><span></span>`;
+
+    b.querySelector("span:last-child").textContent = text;
+
+    b.addEventListener("click", () => choose(i));
+
+    $("options").appendChild(b);
+  });
+
+  $("feedback").className = "feedback";
+  $("feedback").textContent = "";
+
+  $("next").disabled = true;
+  $("next").textContent = "Проверить ответ";
+
+  $("hint").textContent = "Выбери один вариант ответа.";
+
+  $("count").textContent =
+    `Ситуация ${index + 1} из ${cases.length}`;
+
+  $("fill").style.width =
+    `${index / cases.length * 100}%`;
+}
+
+function choose(i) {
+  if (locked) return;
+
+  selected = i;
+
+  [...$("options").children].forEach((b, n) => {
+    b.classList.toggle("selected", n === i);
+  });
+
+  $("next").disabled = false;
+}
+
+$("next").addEventListener("click", () => {
+  if (selected === null) return;
+
+  if (!locked) {
+    locked = true;
+
+    const c = cases[index];
+    const ok = selected === c.correct;
+
+    if (ok) score++;
+
+    [...$("options").children].forEach((b, i) => {
+      b.disabled = true;
+
+      if (i === c.correct) {
+        b.classList.add("correct");
+      } else if (i === selected) {
+        b.classList.add("wrong");
+      }
+    });
+
+    const f = $("feedback");
+
+    f.className = `feedback show ${ok ? "good" : "try"}`;
+
+    const title = document.createElement("strong");
+    title.textContent = ok
+      ? "Верный ход!"
+      : "Разберём этот ход";
+
+    f.replaceChildren(title, document.createTextNode(
+      ok ? c.good : c.bad[selected]
+    ));
+
+    $("next").textContent =
+      index === cases.length - 1
+        ? "Посмотреть результат"
+        : "Следующая ситуация";
+
+    $("hint").textContent = ok
+      ? "Отлично, двигайся дальше."
+      : "Запомни принцип и примени его в следующем диалоге.";
+
+  } else {
+    index++;
+
+    if (index < cases.length) {
+      render();
+    } else {
+      finish();
+    }
+  }
+});
+
+function finish() {
+  $("stage").style.display = "none";
+  $("result").classList.add("show");
+
+  $("fill").style.width = "100%";
+  $("count").textContent = "Готово";
+
+  $("score").textContent = `${score} из ${cases.length}`;
+
+  $("resultTitle").textContent =
+    score === 5
+      ? "Отличная работа!"
+      : score >= 3
+        ? "Практика пройдена!"
+        : "Есть что закрепить";
+
+  $("resultText").textContent =
+    score === 5
+      ? "Ты последовательно проясняешь сомнения, аргументируешь через потребности и договариваешься о следующем шаге."
+      : "Главный ориентир: не спорить с возражением и не торопить клиента. Сначала выясни причину, затем предложи решение, связанное с его задачей, и согласуй продолжение общения.";
+}
+
+function restart() {
+  index = 0;
+  score = 0;
+
+  $("stage").style.display = "block";
+  $("result").classList.remove("show");
+
+  render();
+}
+
+render();
+</script>
+
+</body>
+</html>
