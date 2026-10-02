@@ -11,359 +11,399 @@
 
 body {
   margin: 0;
+  padding: 20px;
   font-family: Arial, sans-serif;
-  background: linear-gradient(135deg, #eaf6ff, #ffffff);
+  background: linear-gradient(135deg,#eaf6ff,#ffffff);
   color: #102b85;
 }
 
-.container {
-  max-width: 1200px;
+.app {
+  max-width: 1250px;
   margin: auto;
-  padding: 30px;
-}
-
-.header {
-  text-align: center;
-  margin-bottom: 28px;
-}
-
-.stage {
-  display: inline-block;
-  background: #d8efff;
-  color: #0874ee;
-  padding: 10px 25px;
-  border-radius: 30px;
-  font-weight: bold;
 }
 
 h1 {
-  font-size: clamp(30px, 5vw, 54px);
-  margin: 18px 0 10px;
-  font-weight: 800;
+  text-align: center;
+  margin: 8px 0 20px;
 }
 
 .subtitle {
-  color: #35518f;
-  font-size: 18px;
-  line-height: 1.5;
+  text-align: center;
+  color: #45618f;
+  margin-bottom: 22px;
 }
 
 .layout {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 22px;
+  grid-template-columns: 1fr 340px;
+  gap: 18px;
+  align-items: start;
 }
 
-.card {
-  background: rgba(255,255,255,0.94);
-  border: 2px solid #d5ebff;
-  border-radius: 22px;
-  padding: 20px;
+.map {
+  position: relative;
+  width: 100%;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 8px 30px #193f7620;
+  background: white;
+}
+
+.map img.base {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.hotspot {
+  position: absolute;
+  border: 2px solid transparent;
+  background: transparent;
+  border-radius: 18px;
   cursor: pointer;
+  transition: .2s;
+}
+
+.hotspot:hover,
+.hotspot.active {
+  border-color: #1685ff;
+  background: #1685ff18;
+  box-shadow: 0 0 0 3px #1685ff35;
+}
+
+.panel {
+  background: white;
+  border: 1px solid #d9eaff;
+  border-radius: 20px;
+  padding: 18px;
+  box-shadow: 0 8px 28px #193f7618;
+  position: sticky;
+  top: 15px;
+}
+
+.panel-head {
   display: flex;
-  gap: 16px;
-  align-items: flex-start;
-  transition: 0.25s;
-  box-shadow: 0 5px 15px rgba(35,110,200,0.07);
-}
-
-.card:hover {
-  transform: translateY(-4px);
-  border-color: #2993ff;
-  box-shadow: 0 10px 24px rgba(35,110,200,0.16);
-}
-
-.card.active {
-  background: #e8f4ff;
-  border-color: #087bfa;
-  box-shadow: 0 0 0 3px rgba(8,123,250,0.12);
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
 }
 
 .number {
-  min-width: 42px;
+  width: 42px;
   height: 42px;
-  border-radius: 50%;
-  background: #087bfa;
+  background: #087cf5;
   color: white;
+  border-radius: 50%;
   display: grid;
   place-items: center;
-  font-weight: bold;
-  font-size: 20px;
-}
-
-.card h2 {
   font-size: 21px;
-  margin: 5px 0 8px;
+  font-weight: bold;
+  flex-shrink: 0;
 }
 
-.card p {
-  color: #466096;
+.panel h2 {
+  font-size: 21px;
   margin: 0;
-  line-height: 1.4;
-}
-
-.detail {
-  margin-top: 25px;
-  padding: 28px;
-  border-radius: 24px;
-  background: white;
-  border: 2px solid #cce7ff;
-  box-shadow: 0 8px 25px rgba(30,100,180,0.09);
-  min-height: 260px;
-}
-
-.detail h2 {
-  font-size: 27px;
-  margin-top: 0;
 }
 
 .question {
-  padding: 13px 16px;
-  margin: 10px 0;
-  background: #f0f8ff;
-  border-radius: 12px;
-  color: #183c8b;
-  line-height: 1.45;
+  color: #173b8c;
+  font-size: 17px;
+  line-height: 1.4;
+  margin: 10px 0 15px;
 }
 
-.question:before {
-  content: "💬 ";
-}
-
-.tip {
-  margin-top: 20px;
-  background: #fff5d7;
-  color: #694d00;
-  padding: 17px;
+.character {
+  min-height: 210px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #edf7ff;
   border-radius: 14px;
-  line-height: 1.5;
-}
-
-.progress {
-  margin-top: 20px;
-  background: #dceeff;
-  height: 10px;
-  border-radius: 20px;
+  margin-bottom: 14px;
   overflow: hidden;
 }
 
-.progress-fill {
-  height: 100%;
-  width: 0%;
-  background: #087bfa;
-  transition: 0.3s;
+.character img {
+  width: 100%;
+  max-height: 250px;
+  object-fit: contain;
 }
 
-.progress-text {
-  margin-top: 10px;
-  color: #42609a;
-  font-size: 14px;
+.question-list {
+  display: grid;
+  gap: 8px;
 }
 
-.footer {
-  margin-top: 25px;
-  padding: 22px;
-  background: #dff1ff;
-  border-radius: 18px;
-  text-align: center;
-  line-height: 1.6;
-  font-size: 17px;
-}
-
-button {
-  background: #087bfa;
-  color: white;
-  border: 0;
-  padding: 13px 22px;
-  border-radius: 12px;
-  font-size: 16px;
+.question-item {
+  border: 1px solid #d9eaff;
+  background: #f2f8ff;
+  border-radius: 10px;
+  padding: 11px;
+  color: #17428e;
   cursor: pointer;
+  text-align: left;
+  font-size: 14px;
+  line-height: 1.35;
+}
+
+.question-item:hover,
+.question-item.selected {
+  background: #dceeff;
+  border-color: #1685ff;
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
   margin-top: 15px;
 }
 
-button:hover { background: #075fc4; }
+button.action {
+  border: 0;
+  border-radius: 25px;
+  padding: 12px 16px;
+  cursor: pointer;
+  font-weight: bold;
+  background: #087cf5;
+  color: white;
+}
 
-@media(max-width: 700px) {
-  .container { padding: 16px; }
+button.secondary {
+  background: #eef5ff;
+  color: #17428e;
+}
+
+button:focus-visible {
+  outline: 3px solid #ffbf47;
+  outline-offset: 3px;
+}
+
+.footer {
+  text-align: center;
+  margin: 18px 0;
+  color: #173b8c;
+  font-size: 14px;
+}
+
+@media(max-width: 850px) {
   .layout { grid-template-columns: 1fr; }
-  .card h2 { font-size: 19px; }
+  .panel { position: static; }
+}
+
+@media(max-width: 520px) {
+  body { padding: 8px; }
+  .panel { padding: 13px; }
+  .panel h2 { font-size: 18px; }
 }
 </style>
 </head>
 
 <body>
-<div class="container">
-
-<header class="header">
-  <div class="stage">Этап 2</div>
+<div class="app">
   <h1>Карта выявления потребностей</h1>
   <div class="subtitle">
-    Выбери раздел карты, чтобы увидеть вопросы для разговора с клиентом.
+    Выберите этап, чтобы изучить вопросы менеджера
   </div>
-</header>
 
-<div class="layout" id="cards"></div>
+  <div class="layout">
+    <div class="map">
+      <img class="base"
+        src="Интерактивная карта выявления потребностей (1).png"
+        alt="Карта выявления потребностей клиента">
 
-<section class="detail" id="detail">
-  <h2>🔎 Начнём разговор</h2>
-  <p>Нажми на любую из семи плашек выше. Откроются вопросы, которые помогут понять потребности клиента.</p>
-</section>
+      <button class="hotspot" style="left:36%;top:3%;width:24%;height:18%"
+        onclick="selectStep(0)" aria-label="Задача"></button>
 
-<div class="progress">
-  <div class="progress-fill" id="progressFill"></div>
-</div>
-<div class="progress-text" id="progressText">Изучено разделов: 0 из 7</div>
+      <button class="hotspot" style="left:64%;top:7%;width:32%;height:19%"
+        onclick="selectStep(1)" aria-label="Контекст"></button>
 
-<div class="footer">
-  <strong>Главное:</strong><br>
-  Наша задача не собрать как можно больше информации,
-  а понять, какое решение действительно подойдёт клиенту.
-  <br>
-  <button onclick="resetMap()">Начать заново</button>
-</div>
+      <button class="hotspot" style="left:69%;top:30%;width:28%;height:18%"
+        onclick="selectStep(2)" aria-label="Параметры"></button>
 
+      <button class="hotspot" style="left:69%;top:52%;width:29%;height:17%"
+        onclick="selectStep(3)" aria-label="Ограничения"></button>
+
+      <button class="hotspot" style="left:13%;top:69%;width:25%;height:17%"
+        onclick="selectStep(4)" aria-label="Сроки"></button>
+
+      <button class="hotspot" style="left:10%;top:48%;width:28%;height:17%"
+        onclick="selectStep(5)" aria-label="Условия покупки"></button>
+
+      <button class="hotspot" style="left:23%;top:29%;width:23%;height:17%"
+        onclick="selectStep(6)" aria-label="Принятие решения"></button>
+    </div>
+
+    <section class="panel" aria-live="polite">
+      <div class="panel-head">
+        <div class="number" id="stepNumber">1</div>
+        <h2 id="stepTitle">Задача</h2>
+      </div>
+
+      <div class="question" id="stepDescription">
+        Что клиент хочет решить?
+      </div>
+
+      <div class="character">
+        <img id="characterImage" src="pose_1.png" alt="Девушка-консультант">
+      </div>
+
+      <div class="question-list" id="questionList"></div>
+
+      <div class="controls">
+        <button class="action secondary" onclick="previousStep()">Назад</button>
+        <button class="action" onclick="nextStep()">Следующий этап →</button>
+      </div>
+
+      <div class="controls">
+        <button class="action secondary" onclick="restart()">Начать заново ↺</button>
+        <span id="progress">1 / 7</span>
+      </div>
+    </section>
+  </div>
+
+  <div class="footer">
+    Наша задача не собрать максимум информации, а понять, что поможет подобрать подходящее решение.
+  </div>
 </div>
 
 <script>
-const sections = [
-{
-title:"Задача",
-short:"Что клиент хочет решить?",
-questions:[
-"Для чего вы подбираете садовую мебель?",
-"Какую задачу должна решить покупка?",
-"Что для вас будет главным результатом удачного выбора?",
-"Что стало поводом задуматься о покупке именно сейчас?"
-],
-tip:"Выясни не только какую мебель хочет клиент, но и зачем она ему нужна."
-},
-{
-title:"Контекст",
-short:"Где и как будет использоваться мебель?",
-questions:[
-"Где планируете разместить мебель: на террасе, даче, в саду или у бассейна?",
-"Мебель будет находиться под открытым небом или под навесом?",
-"Как часто планируете ей пользоваться?",
-"Кто чаще всего будет пользоваться мебелью?"
-],
-tip:"Условия эксплуатации помогают понять, какие материалы и конструкции подойдут."
-},
-{
-title:"Параметры",
-short:"Какие характеристики действительно важны?",
-questions:[
-"На какое количество человек рассчитываете?",
-"Какие предметы мебели вам необходимы?",
-"Есть ли предпочтения по цвету и материалу?",
-"Какие размеры пространства нужно учитывать?",
-"Что для вас важнее всего: внешний вид, удобство или функциональность?"
-],
-tip:"Не предлагай ассортимент вслепую. Сначала определи ключевые параметры."
-},
-{
-title:"Ограничения",
-short:"Что может повлиять на выбор?",
-questions:[
-"Есть ли ограничения по размеру или размещению мебели?",
-"Нужно ли учитывать особенности поверхности или площадки?",
-"Есть ли требования к уходу и хранению?",
-"С какими условиями эксплуатации должна справляться мебель?"
-],
-tip:"Ограничения помогают сразу исключить неподходящие варианты."
-},
-{
-title:"Сроки",
-short:"Когда продукт нужен?",
-questions:[
-"К какому времени планируете приобрести мебель?",
-"Есть ли конкретная дата, к которой всё должно быть готово?",
-"Покупка планируется сейчас или пока изучаете варианты?",
-"Насколько принципиальны сроки получения?"
-],
-tip:"Сроки помогают определить приоритетность предложения и дальнейшие действия."
-},
-{
-title:"Условия покупки",
-short:"Объём, бюджет, доставка и оплата",
-questions:[
-"Какое количество комплектов или отдельных изделий рассматриваете?",
-"На какой бюджет ориентируетесь?",
-"Потребуется ли доставка? Куда именно?",
-"Какой способ оплаты вам удобен?",
-"Планируете приобрести всё сразу или поэтапно?"
-],
-tip:"Обсуждай бюджет и условия спокойно, как параметры подбора решения."
-},
-{
-title:"Принятие решения",
-short:"Кто выбирает и согласовывает покупку?",
-questions:[
-"Вы самостоятельно принимаете решение о покупке?",
-"Нужно ли с кем-то согласовать выбор?",
-"Какие критерии будут определяющими при сравнении вариантов?",
-"Что ещё необходимо, чтобы вы могли принять решение?",
-"Когда будет удобно вернуться к обсуждению?"
-],
-tip:"Понимание процесса принятия решения помогает договориться о конкретном следующем шаге."
-}
+const steps = [
+  {
+    title: "Задача",
+    description: "Что клиент хочет решить?",
+    questions: [
+      "Для чего вы подбираете мебель?",
+      "Что именно хотите обустроить?",
+      "Какой результат для вас будет идеальным?",
+      "Что сейчас не устраивает в имеющемся решении?"
+    ]
+  },
+  {
+    title: "Контекст",
+    description: "Где и как будет использоваться мебель?",
+    questions: [
+      "Где планируете использовать мебель?",
+      "Это частное или коммерческое использование?",
+      "Какие условия эксплуатации?",
+      "Какой стиль и окружение?"
+    ]
+  },
+  {
+    title: "Параметры",
+    description: "Какие характеристики действительно важны?",
+    questions: [
+      "На какое количество человек рассчитываете?",
+      "Какие размеры или габариты подходят?",
+      "Какие материалы и цвета рассматриваете?",
+      "Что для вас важнее всего в характеристиках?"
+    ]
+  },
+  {
+    title: "Ограничения",
+    description: "Что может повлиять на выбор?",
+    questions: [
+      "Есть ли ограничения по месту установки?",
+      "Какие размеры нельзя превышать?",
+      "Есть ли особые требования к материалу?",
+      "Что точно не подойдёт?"
+    ]
+  },
+  {
+    title: "Сроки",
+    description: "Когда продукт нужен?",
+    questions: [
+      "К какой дате нужна мебель?",
+      "Есть ли привязка к событию или открытию сезона?",
+      "Рассматриваете готовые позиции или готовы ждать изготовление?",
+      "Насколько критично соблюдение срока?"
+    ]
+  },
+  {
+    title: "Условия покупки",
+    description: "Объём, бюджет, доставка, оплата.",
+    questions: [
+      "Какой объём планируете приобрести?",
+      "На какой бюджет ориентируетесь?",
+      "Нужна ли доставка?",
+      "Какой способ оплаты удобен?"
+    ]
+  },
+  {
+    title: "Принятие решения",
+    description: "Кто выбирает, согласовывает и принимает решение?",
+    questions: [
+      "Кто будет участвовать в выборе?",
+      "Нужно ли с кем-то согласовать предложение?",
+      "По каким критериям будете сравнивать варианты?",
+      "Что поможет вам принять решение?"
+    ]
+  }
 ];
 
-let completed = new Set();
-let active = -1;
+let currentStep = 0;
+let selectedQuestion = -1;
 
-function renderCards() {
-  document.getElementById("cards").innerHTML = sections.map((s,i)=>`
-    <div class="card ${active===i?'active':''}" onclick="selectSection(${i})">
-      <div class="number">${completed.has(i) ? '✓' : i+1}</div>
-      <div>
-        <h2>${s.title}</h2>
-        <p>${s.short}</p>
-      </div>
-    </div>
-  `).join("");
+function render() {
+  const step = steps[currentStep];
+
+  document.getElementById("stepNumber").textContent = currentStep + 1;
+  document.getElementById("stepTitle").textContent = step.title;
+  document.getElementById("stepDescription").textContent = step.description;
+  document.getElementById("characterImage").src =
+    "pose_" + (currentStep + 1) + ".png";
+  document.getElementById("progress").textContent =
+    (currentStep + 1) + " / " + steps.length;
+
+  document.querySelectorAll(".hotspot").forEach((button, index) => {
+    button.classList.toggle("active", index === currentStep);
+  });
+
+  const list = document.getElementById("questionList");
+  list.innerHTML = "";
+
+  step.questions.forEach((question, index) => {
+    const button = document.createElement("button");
+    button.className = "question-item" +
+      (selectedQuestion === index ? " selected" : "");
+    button.textContent = "💬 " + question;
+
+    button.onclick = () => {
+      selectedQuestion = index;
+      render();
+    };
+
+    list.appendChild(button);
+  });
 }
 
-function selectSection(i) {
-  active = i;
-  completed.add(i);
-  const s = sections[i];
-
-  document.getElementById("detail").innerHTML = `
-    <h2>${i+1}. ${s.title}</h2>
-    <p>Примеры открытых вопросов для менеджера:</p>
-    ${s.questions.map(q=>`<div class="question">${q}</div>`).join("")}
-    <div class="tip"><strong>Подсказка менеджеру:</strong><br>${s.tip}</div>
-    <button onclick="nextSection()">Следующий раздел →</button>
-  `;
-
-  updateProgress();
-  renderCards();
+function selectStep(index) {
+  currentStep = index;
+  selectedQuestion = -1;
+  render();
 }
 
-function nextSection() {
-  let next = (active + 1) % sections.length;
-  selectSection(next);
+function nextStep() {
+  currentStep = (currentStep + 1) % steps.length;
+  selectedQuestion = -1;
+  render();
 }
 
-function updateProgress() {
-  document.getElementById("progressFill").style.width =
-    (completed.size / sections.length * 100) + "%";
-  document.getElementById("progressText").textContent =
-    `Изучено разделов: ${completed.size} из 7`;
+function previousStep() {
+  currentStep = (currentStep - 1 + steps.length) % steps.length;
+  selectedQuestion = -1;
+  render();
 }
 
-function resetMap() {
-  completed.clear();
-  active = -1;
-  document.getElementById("detail").innerHTML = `
-    <h2>🔎 Начнём разговор</h2>
-    <p>Нажми на любую из семи плашек выше. Откроются вопросы, которые помогут понять потребности клиента.</p>
-  `;
-  updateProgress();
-  renderCards();
+function restart() {
+  currentStep = 0;
+  selectedQuestion = -1;
+  render();
 }
 
-renderCards();
+render();
 </script>
 </body>
 </html>
