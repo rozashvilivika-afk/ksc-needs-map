@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Что изменилось конструктивно?</title>
+<style>
+:root{--b:#1558c9;--bd:#073b8c;--bl:#eef5ff;--y:#ffc400;--g:#20a05a;--r:#e45757;--t:#12345d;--m:#5f718b;--br:#cfe0f5}
+*{box-sizing:border-box}
+body{margin:0;background:#f7fbff;font-family:Arial,Helvetica,sans-serif;color:var(--t)}
+#app{max-width:900px;margin:auto;padding:24px;line-height:1.45}
+.hero,.card{background:#fff;border:1px solid var(--br);border-radius:26px}
+.hero{padding:32px;background:radial-gradient(circle at 90% 0%,rgba(255,196,0,.16),transparent 28%),linear-gradient(135deg,#f7fbff,#fff)}
+.badge{display:inline-block;background:var(--y);color:var(--bd);font-weight:800;font-size:13px;padding:7px 12px;border-radius:999px;margin-bottom:16px}
+h1{font-size:clamp(28px,5vw,46px);line-height:1.04;color:var(--b);margin:0 0 12px}
+.muted{color:var(--m)}
+.card{padding:28px;margin-top:20px}
+.options{display:grid;gap:12px}
+.opt{width:100%;text-align:left;border:1px solid #d6e3f3;background:#fff;border-radius:16px;padding:16px 18px;color:var(--t);font-size:16px;cursor:pointer;transition:.2s}
+.opt.selected{background:var(--bl);border-color:var(--b)}
+.opt.correct{background:#edf9f2;border-color:var(--g);color:#176d3e}
+.opt.wrong{background:#fff0f0;border-color:var(--r);color:#9d2c2c}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
+.btn{border:0;border-radius:14px;min-height:46px;padding:0 20px;font-size:15px;font-weight:800;cursor:pointer}
+.primary{background:var(--b);color:#fff}
+.secondary{background:var(--bl);color:var(--b);border:1px solid var(--br)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.feedback{display:none;margin-top:18px;padding:16px;border-radius:16px;font-weight:700}
+.feedback.show{display:block}
+.good{background:#edf9f2;border:1px solid #b8ead3;color:#176d3e}
+.bad{background:#fff4f4;border:1px solid #f2c2c2;color:#9d3030}
+@media(max-width:600px){#app{padding:12px}.hero,.card{padding:20px}}
+</style>
+</head>
+<body>
+<div id="app">
+<section class="hero">
+<div class="badge">СРАВНЕНИЕ</div>
+<h1>Что изменилось конструктивно?</h1>
+<p class="muted">Посмотрите на две ёмкости и выберите все верные варианты.</p>
+</section>
+
+<section class="card">
+<div class="options">
+<button class="opt" data-correct="true">Корпус выполнен в другом цвете</button>
+<button class="opt" data-correct="true">Горловина смещена от центра к краю</button>
+<button class="opt" data-correct="true">Другое расположение площадок для фитингов</button>
+<button class="opt" data-correct="false">Ничем не отличаются</button>
+<button class="opt" data-correct="false">Ничего общего не видно — абсолютно другая серия</button>
+</div>
+
+<div class="actions">
+<button id="check" class="btn primary" disabled>Проверить</button>
+<button id="reset" class="btn secondary">Попробовать ещё раз</button>
+</div>
+
+<div id="feedback" class="feedback"></div>
+</section>
+</div>
+
+<script>
+(()=>{const opts=[...document.querySelectorAll('.opt')],check=document.getElementById('check'),reset=document.getElementById('reset'),feedback=document.getElementById('feedback');
+opts.forEach(o=>o.addEventListener('click',()=>{o.classList.toggle('selected');o.classList.remove('correct','wrong');feedback.className='feedback';feedback.textContent='';check.disabled=!opts.some(x=>x.classList.contains('selected'))}));
+check.addEventListener('click',()=>{const selected=opts.filter(x=>x.classList.contains('selected'));const correct=opts.filter(x=>x.dataset.correct==='true');let allRight=selected.length===correct.length&&selected.every(x=>x.dataset.correct==='true');
+opts.forEach(o=>{o.disabled=true;if(o.classList.contains('selected'))o.classList.add(o.dataset.correct==='true'?'correct':'wrong')});
+feedback.className='feedback show '+(allRight?'good':'bad');feedback.textContent=allRight?'Верно! Вы нашли все конструктивные отличия.':'Посмотрите ещё раз: зелёным отмечены верные выбранные варианты, красным — ошибочные.';check.disabled=true});
+reset.addEventListener('click',()=>{opts.forEach(o=>{o.disabled=false;o.classList.remove('selected','correct','wrong')});check.disabled=true;feedback.className='feedback';feedback.textContent=''});
+})();
+</script>
+</body></html>
