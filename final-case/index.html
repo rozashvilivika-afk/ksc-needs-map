@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Финальный кейс: подбор ёмкости</title>
+<style>
+:root{--b:#0b57c7;--bd:#073b8c;--bl:#edf5ff;--y:#ffc400;--g:#16a36a;--r:#df4b4b;--t:#132c50;--m:#64748b;--br:#dce8f7}
+*{box-sizing:border-box}body{margin:0;background:#f7fbff;font-family:Arial,Helvetica,sans-serif;color:var(--t)}#app{max-width:900px;margin:auto;padding:24px;line-height:1.45}
+.hero,.card,.result{background:#fff;border:1px solid var(--br);border-radius:26px}.hero{padding:32px;background:radial-gradient(circle at 90% 0%,rgba(255,196,0,.16),transparent 28%),linear-gradient(135deg,#f7fbff,#fff)}
+.badge{display:inline-block;background:var(--y);color:var(--bd);font-weight:800;font-size:13px;padding:7px 12px;border-radius:999px;margin-bottom:16px}
+h1{font-size:clamp(28px,5vw,46px);line-height:1.04;color:var(--b);margin:0 0 12px}h2{color:var(--b);margin:0 0 10px}.muted{color:var(--m)}
+.client{margin-top:22px;background:#fff;border:1px solid var(--br);border-radius:18px;padding:20px}.client b{display:block;color:var(--b);font-size:13px;text-transform:uppercase;margin-bottom:6px}
+.progress-wrap{margin:22px 0}.prow{display:flex;justify-content:space-between;font-size:13px;font-weight:700;color:var(--m);margin-bottom:8px}.track{height:8px;background:#e9f0f8;border-radius:999px;overflow:hidden}.bar{height:100%;width:20%;background:linear-gradient(90deg,var(--b),#2479ec);transition:.3s}
+.step{display:none}.step.active{display:block}.card{padding:28px}.num{width:44px;height:44px;border-radius:50%;background:var(--y);display:grid;place-items:center;font-weight:900;font-size:22px;color:var(--bd);margin-bottom:14px}
+.options{display:grid;gap:12px}.opt{width:100%;text-align:left;border:1px solid var(--br);background:#fff;border-radius:16px;padding:16px 18px;color:var(--t);font-size:16px;cursor:pointer}
+.opt.selected{background:var(--bl);border-color:var(--b)}.opt.correct{background:#effbf6;border-color:var(--g)}.opt.wrong{background:#fff4f4;border-color:var(--r)}
+.feedback{display:none;margin-top:18px;padding:16px;border-radius:16px}.feedback.show{display:block}.good{background:#effbf6;border:1px solid #b8ead3;color:#0b6844}.bad{background:#fff4f4;border:1px solid #f2c2c2;color:#9d3030}
+.data{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:20px 0}.data div{background:var(--bl);border-radius:16px;padding:16px;text-align:center}.data strong{display:block;font-size:23px;color:var(--b)}
+.flow{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;align-items:center;margin:20px 0}.flow span{background:var(--bl);border-radius:14px;padding:12px 14px;font-weight:700;color:var(--bd)}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}.btn{border:0;border-radius:14px;min-height:46px;padding:0 20px;font-size:15px;font-weight:800;cursor:pointer}.primary{background:var(--b);color:#fff}.secondary{background:var(--bl);color:var(--b)}.btn:disabled{opacity:.45;cursor:not-allowed}
+.result{display:none;overflow:hidden}.result.show{display:block}.rhead{padding:28px;background:linear-gradient(135deg,#0757c9,#073d94);color:#fff}.rbody{padding:28px}.line{margin:10px 0;font-weight:700}.rule{margin-top:24px;padding:20px;background:#fff8dc;border:1px solid #ffe17b;border-radius:18px;text-align:center;font-weight:800}
+@media(max-width:600px){#app{padding:12px}.hero,.card,.rhead,.rbody{padding:20px}.data{grid-template-columns:1fr}.flow{flex-direction:column}}
+</style>
+</head>
+<body>
+<div id="app">
+<section class="hero">
+<div class="badge">ФИНАЛЬНЫЙ КЕЙС</div>
+<h1>Попробуйте подобрать решение клиенту</h1>
+<p class="muted">Пройдите весь путь менеджера: от первого запроса до проверки решения по паспорту.</p>
+<div class="client"><b>Запрос клиента</b>«Нужна ёмкость для воды на дачу, примерно на 3 000 литров. Места немного. Вода будет автоматически поступать из скважины, а затем из ёмкости подаваться в дом».</div>
+</section>
+
+<div class="progress-wrap"><div class="prow"><span id="label">Шаг 1 из 5</span><span>Подбор решения</span></div><div class="track"><div id="bar" class="bar"></div></div></div>
+
+<section class="step active" data-step="1"><div class="card">
+<div class="num">1</div><h2>С чего начинаем?</h2><p class="muted">Клиент назвал объём. Что нужно сделать прежде, чем выбирать модель?</p>
+<div class="options" data-mode="single">
+<button class="opt" data-correct="false">Сразу найти любую ёмкость на 3 000 л</button>
+<button class="opt" data-correct="true">Уточнить место установки, доступные размеры и схему работы системы</button>
+<button class="opt" data-correct="false">Предложить самую популярную модель</button>
+</div><div class="feedback"></div><div class="actions"><button class="btn primary check" disabled>Проверить</button><button class="btn secondary next" style="display:none">Продолжить →</button></div>
+</div></section>
+
+<section class="step" data-step="2"><div class="card">
+<div class="num">2</div><h2>Проверяем выбранную модель</h2><p class="muted">Для цилиндрической ёмкости объёмом 3 000 л в таблице указаны:</p>
+<div class="data"><div><strong>3 000 л</strong>объём</div><div><strong>1 520 мм</strong>диаметр</div><div><strong>2 050 мм</strong>высота</div></div>
+<p>Что нужно сделать дальше?</p>
+<div class="options" data-mode="single">
+<button class="opt" data-correct="false">Если объём подходит, размеры уже не важны</button>
+<button class="opt" data-correct="true">Сравнить диаметр и высоту ёмкости с доступным местом</button>
+<button class="opt" data-correct="false">Проверить только диаметр крышки</button>
+</div><div class="feedback"></div><div class="actions"><button class="btn primary check" disabled>Проверить</button><button class="btn secondary next" style="display:none">Продолжить →</button></div>
+</div></section>
+
+<section class="step" data-step="3"><div class="card">
+<div class="num">3</div><h2>Поместится ли ёмкость?</h2><p class="muted">Клиент уточнил доступное место:</p>
+<div class="data"><div><strong>1 700 мм</strong>ширина</div><div><strong>2 300 мм</strong>высота</div><div><strong>±3%</strong>допуск</div></div>
+<p>Ёмкость: Ø 1 520 мм, высота 2 050 мм. Какой вывод правильный?</p>
+<div class="options" data-mode="single">
+<button class="opt" data-correct="true">По номинальным размерам подходит, но нужно учитывать допуск и запас для установки</button>
+<button class="opt" data-correct="false">Не подходит: диаметр больше доступной ширины</button>
+<button class="opt" data-correct="false">Подходит без дополнительных проверок</button>
+</div><div class="feedback"></div><div class="actions"><button class="btn primary check" disabled>Проверить</button><button class="btn secondary next" style="display:none">Продолжить →</button></div>
+</div></section>
+
+<section class="step" data-step="4"><div class="card">
+<div class="num">4</div><h2>Собираем систему</h2>
+<div class="flow"><span>Скважина</span>→<span>Наполнение</span>→<span>Ёмкость</span>→<span>Подача в дом</span></div>
+<p class="muted">Выберите все элементы, которые стоит предусмотреть.</p>
+<div class="options" data-mode="multiple">
+<button class="opt" data-correct="true">Фильтрация на подающей магистрали</button>
+<button class="opt" data-correct="true">Контроль уровня воды</button>
+<button class="opt" data-correct="true">Дыхательный клапан</button>
+<button class="opt" data-correct="false">Нагреватель внутри ёмкости</button>
+</div><div class="feedback"></div><div class="actions"><button class="btn primary check" disabled>Проверить</button><button class="btn secondary next" style="display:none">Продолжить →</button></div>
+</div></section>
+
+<section class="step" data-step="5"><div class="card">
+<div class="num">5</div><h2>Финальная проверка</h2><p class="muted">Где проверить требования к монтажу, ограничения и условия эксплуатации?</p>
+<div class="options" data-mode="single">
+<button class="opt" data-correct="false">В рекламной карточке товара</button>
+<button class="opt" data-correct="true">В паспорте ёмкости</button>
+<button class="opt" data-correct="false">Только уточнить у клиента</button>
+</div><div class="feedback"></div><div class="actions"><button class="btn primary check" disabled>Проверить</button><button class="btn primary next" style="display:none">Посмотреть решение</button></div>
+</div></section>
+
+<section id="result" class="result"><div class="rhead"><h2 style="color:white">Решение собрано</h2><div id="score"></div></div><div class="rbody">
+<div class="line">1. Уточнили задачу: вода для дачи, около 3 000 л.</div>
+<div class="line">2. Проверили место: доступные габариты и условия установки.</div>
+<div class="line">3. Подобрали модель: 3 000 л, Ø 1 520 мм, высота 2 050 мм.</div>
+<div class="line">4. Продумали систему: наполнение, фильтрация, контроль уровня, вентиляция и подача воды.</div>
+<div class="line">5. Проверили паспорт: монтаж, ограничения и требования эксплуатации.</div>
+<div class="rule">Подходит по задаче → помещается → правильно подключается → соответствует условиям эксплуатации</div>
+<div class="actions"><button id="restart" class="btn secondary">Пройти ещё раз</button></div>
+</div></section>
+</div>
+
+<script>
+(()=>{const app=document.getElementById('app'),steps=[...app.querySelectorAll('.step')],bar=document.getElementById('bar'),label=document.getElementById('label'),result=document.getElementById('result'),scoreEl=document.getElementById('score');let current=1,score=0;
+const msg={1:'Объём — только начало подбора. Сначала уточняем место установки, ограничения по габаритам и схему работы системы.',2:'Важно не запоминать размеры, а уметь найти их в таблице и сопоставить с условиями клиента.',3:'По номинальным размерам ёмкость помещается, но нужно учитывать допуск ±3% и запас для монтажа и обслуживания.',4:'Мы подбираем не просто ёмкость, а рабочую систему: наполнение, фильтрацию, контроль уровня, вентиляцию и подачу воды.',5:'Технические ограничения, требования к монтажу и эксплуатации проверяем по паспорту ёмкости.'};
+function show(n){current=n;steps.forEach(s=>s.classList.toggle('active',+s.dataset.step===n));result.classList.remove('show');bar.style.width=(n/5*100)+'%';label.textContent='Шаг '+n+' из 5';window.scrollTo({top:0,behavior:'smooth'})}
+steps.forEach(step=>{const options=[...step.querySelectorAll('.opt')],mode=step.querySelector('.options').dataset.mode,check=step.querySelector('.check'),next=step.querySelector('.next'),fb=step.querySelector('.feedback');
+options.forEach(o=>o.addEventListener('click',()=>{if(check.dataset.done==='1')return;if(mode==='single')options.forEach(x=>x.classList.remove('selected'));o.classList.toggle('selected');check.disabled=!options.some(x=>x.classList.contains('selected'))}));
+check.addEventListener('click',()=>{const sel=options.filter(x=>x.classList.contains('selected')),cor=options.filter(x=>x.dataset.correct==='true');const ok=mode==='single'?sel.length===1&&sel[0].dataset.correct==='true':sel.length===cor.length&&sel.every(x=>x.dataset.correct==='true');options.forEach(o=>{o.disabled=true;if(o.dataset.correct==='true')o.classList.add('correct');else if(o.classList.contains('selected'))o.classList.add('wrong')});fb.className='feedback show '+(ok?'good':'bad');fb.innerHTML='<strong>'+(ok?'Верно.':'Не совсем.')+'</strong> '+msg[current];if(ok)score++;check.dataset.done='1';check.style.display='none';next.style.display='inline-flex'});
+next.addEventListener('click',()=>{const n=+step.dataset.step;if(n<5)show(n+1);else{steps.forEach(s=>s.classList.remove('active'));bar.style.width='100%';label.textContent='Кейс завершён';scoreEl.textContent='Ваш результат: '+score+' из 5';result.classList.add('show')}})});
+document.getElementById('restart').addEventListener('click',()=>{score=0;steps.forEach(step=>{step.querySelectorAll('.opt').forEach(o=>{o.disabled=false;o.classList.remove('selected','correct','wrong')});const c=step.querySelector('.check'),n=step.querySelector('.next'),f=step.querySelector('.feedback');c.disabled=true;c.dataset.done='0';c.style.display='inline-flex';n.style.display='none';f.className='feedback';f.innerHTML=''});show(1)});})();
+</script>
+</body></html>
